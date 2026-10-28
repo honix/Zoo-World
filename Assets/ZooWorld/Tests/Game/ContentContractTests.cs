@@ -50,9 +50,13 @@ namespace ZooWorld.Game.Tests
             var colliders = prefab.GetComponents<Collider>();
             Assert.That(colliders.Any(collider => collider.enabled && !collider.isTrigger), Is.True, "needs a solid collider on the root");
 
-            var visual = prefab.transform.Find("Visual");
+            var visual = prefab.transform.Find(Animal.VisualName);
             Assert.That(visual, Is.Not.Null, "the look belongs on a child named Visual");
             Assert.That(visual.GetComponentsInChildren<Collider>(true), Is.Empty, "the Visual must not change physics");
+
+            // Views animate from the scale they find at start; a collapsed one stays invisible.
+            var collapsed = visual.GetComponentsInChildren<Transform>(true).Where(part => part.localScale.sqrMagnitude < 1e-6f);
+            Assert.That(collapsed.Select(part => part.name), Is.Empty, "parts of the Visual have zero scale");
         }
 
         [TestCaseSource(nameof(Animals))]
