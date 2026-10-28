@@ -5,7 +5,8 @@
         "UnityEngine.TestRunner",
         "ZooWorld.Core",
         "ZooWorld.Game",
-        "VContainer"
+        "VContainer",
+        "Unity.TextMeshPro"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
