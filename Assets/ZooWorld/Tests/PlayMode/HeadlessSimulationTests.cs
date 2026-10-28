@@ -81,6 +81,7 @@ namespace ZooWorld.Game.PlayModeTests
             var first = new Run(Build(seed: 7));
             yield return first.Simulate(seconds: 40f);
             first.Dispose();
+            yield return null; // Destroy is deferred to the end of the frame: clear the physics scene.
 
             var second = new Run(Build(seed: 7));
             yield return second.Simulate(seconds: 40f);
@@ -95,7 +96,8 @@ namespace ZooWorld.Game.PlayModeTests
             var installer = new ZooInstaller(settings, new FixedPlayArea(Visible, settings.ScreenMargin, settings.SpawnMargin))
             {
                 Seed = seed,
-                RunInPlayerLoop = false
+                RunInPlayerLoop = false,
+                WithVisuals = false
             };
 
             var builder = new ContainerBuilder();

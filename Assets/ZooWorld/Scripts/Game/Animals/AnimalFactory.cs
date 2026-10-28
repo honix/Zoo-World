@@ -18,15 +18,18 @@ namespace ZooWorld.Game.Animals
         private readonly AnimalRegistry _registry;
         private readonly AnimalProfileMapper _profiles;
         private readonly IRandom _movementRandom;
+        private readonly bool _withVisuals;
         private readonly Transform _root;
         private readonly Dictionary<Animal, ObjectPool<Animal>> _poolsByPrefab = new Dictionary<Animal, ObjectPool<Animal>>();
         private readonly Dictionary<Animal, ObjectPool<Animal>> _poolsByInstance = new Dictionary<Animal, ObjectPool<Animal>>();
 
-        public AnimalFactory(AnimalRegistry registry, AnimalProfileMapper profiles, IRandom movementRandom)
+        /// <param name="withVisuals">False for headless runs: animals get no look and no views.</param>
+        public AnimalFactory(AnimalRegistry registry, AnimalProfileMapper profiles, IRandom movementRandom, bool withVisuals = true)
         {
             _registry = registry;
             _profiles = profiles;
             _movementRandom = movementRandom;
+            _withVisuals = withVisuals;
             _root = new GameObject("Animals").transform;
         }
 
@@ -61,6 +64,7 @@ namespace ZooWorld.Game.Animals
                 {
                     var instance = Object.Instantiate(prefab, _root);
                     instance.name = prefab.name;
+                    instance.SetVisualEnabled(_withVisuals);
                     _poolsByInstance.Add(instance, pool);
                     return instance;
                 },

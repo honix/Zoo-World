@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using UnityEngine;
 using ZooWorld.Core.Animals;
 using ZooWorld.Game.Configs;
@@ -15,6 +16,9 @@ namespace ZooWorld.Game.Animals
     [RequireComponent(typeof(Rigidbody))]
     public sealed class Animal : MonoBehaviour, IMovementBody
     {
+        /// <summary>Name of the child that holds the look. Nothing under it affects logic or physics.</summary>
+        public const string VisualName = "Visual";
+
         [Tooltip("How fast the animal turns to face its heading, in degrees per second.")]
         [SerializeField, Min(0f)] private float _turnSpeed = 720f;
 
@@ -88,20 +92,29 @@ namespace ZooWorld.Game.Animals
             SetCollidersEnabled(false);
             Died?.Invoke();
 
-            var pending = _deathAnimations.Length;
+            // Only views that are actually running get to delay recycling.
+            var playing = _deathAnimations.Where(animation => !(animation is Behaviour view) || view.isActiveAndEnabled).ToArray();
+            var pending = playing.Length;
             if (pending == 0)
             {
                 onRecyclable();
                 return;
             }
 
-            foreach (var animation in _deathAnimations)
+            foreach (var animation in playing)
             {
                 animation.Play(() =>
                 {
                     if (--pending == 0) onRecyclable();
                 });
             }
+        }
+
+        /// <summary>Shows or hides the look. Headless runs hide it, so no view runs.</summary>
+        public void SetVisualEnabled(bool isEnabled)
+        {
+            var visual = transform.Find(VisualName);
+            if (visual != null) visual.gameObject.SetActive(isEnabled);
         }
 
         private void OnCollisionEnter(Collision collision)

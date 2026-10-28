@@ -40,6 +40,12 @@ namespace ZooWorld.Game.Infrastructure
         /// </summary>
         public bool RunInPlayerLoop { get; set; } = true;
 
+        /// <summary>
+        /// When false, animals spawn without their Visual: nothing renders and no view runs,
+        /// so headless runs depend on simulation time only.
+        /// </summary>
+        public bool WithVisuals { get; set; } = true;
+
         public void Install(IContainerBuilder builder)
         {
             var streams = new RandomStreams(ResolveSeed());
@@ -71,7 +77,9 @@ namespace ZooWorld.Game.Infrastructure
 
             // Animals on the scene.
             builder.Register<AnimalProfileMapper>(Lifetime.Singleton);
-            builder.Register<AnimalFactory>(Lifetime.Singleton).WithParameter(streams.Movement);
+            builder.Register<AnimalFactory>(Lifetime.Singleton)
+                .WithParameter(streams.Movement)
+                .WithParameter("withVisuals", WithVisuals);
             builder.Register<AnimalPopulation>(Lifetime.Singleton);
             builder.Register<OffScreenSteering>(Lifetime.Singleton).WithParameter(streams.Movement);
             if (RunInPlayerLoop) builder.RegisterEntryPoint<ZooSimulation>().AsSelf();
