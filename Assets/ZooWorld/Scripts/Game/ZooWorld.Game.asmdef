@@ -1,0 +1,19 @@
+{
+    "name": "ZooWorld.Game",
+    "rootNamespace": "ZooWorld.Game",
+    "references": [
+        "ZooWorld.Core",
+        "VContainer",
+        "Unity.TextMeshPro",
+        "UnityEngine.UI"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
