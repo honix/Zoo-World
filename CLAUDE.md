@@ -13,14 +13,30 @@ Read both before planning or starting a feature. They are the source of truth; t
 - No ECS.
 - `ZooWorld.Core` has no engine references. Dependencies point one way: Game → Core.
 - No singletons, static managers or `FindObjectOfType`. Services come from DI (VContainer).
+- Views only react to events (`Animal.Spawned/Ate/Died/Redirected`, `IJumpCues`) and never feed back into logic. Logic never waits for a view; only pooling waits for the death animation.
+- The look lives under the prefab's `Visual` child: no colliders there (a contract test enforces it). Headless runs hide it (`ZooInstaller.WithVisuals = false`).
+- `DefaultWorld` stays exactly as in the spec (frog and snake). Extra animals go into `ExtendedWorld`.
+- Adding an animal from existing parts must stay assets-only (commit type `assets`). If it needs code, the architecture has a gap: say so.
 
 ## Unity tooling
 
 The Unity CLI drives the open Editor through `com.unity.pipeline` (verified working). Use the `unity:unity-cli` skill, and pass `--project-path "C:/Users/fyodor.shchukin/Zoo World"` on every call.
 - Compile check: `unity recompile --project-path ... --format json`.
-- Tests: `unity command test run --mode editor|playmode --filter <asm> --filter_type assembly --result-only`. Use this, not `unity test`, which refuses a project that's open in the Editor.
-- Build scenes, prefabs and assets with `unity command` (e.g. `scene get_hierarchy`, `prefab create_variant`, `asset create`), not by hand-editing YAML.
+- Tests: `unity command test run --mode editor --filter <asm> --filter_type assembly --result-only`. Use this, not `unity test`, which refuses a project that's open in the Editor.
+  - PlayMode can't run synchronously (the domain reload drops the request): add `--async_tests true`, then poll `unity command test status`.
+  - Contract tests use `TestCaseSource` over assets, which is cached until a domain reload. After adding content, run `EditorUtility.RequestScriptReload()` before testing.
+  - Assemblies: `ZooWorld.Core.Tests`, `ZooWorld.Game.Tests` (EditMode), `ZooWorld.Game.PlayModeTests`.
+- Build scenes, prefabs and assets in the live Editor, not by hand-editing YAML: use `unity command` or `script eval_file` with a C# script kept outside the repo. Eval wraps code in a method body, so no `using` directives: fully qualify types.
 - If a call stalls, check `unity status`. The Editor may be compiling, in Safe Mode, or need focus.
+- Play mode freezes when the Editor isn't focused, because the project's Run In Background is off. For checks, `unity command editor.playmode set_run_in_background`, then restore it with `--enable false`. Never commit `runInBackground: 1`.
+- Screenshots: `capture screenshot` misses the overlay HUD. In Play mode use `script eval 'UnityEngine.ScreenCapture.CaptureScreenshot("Temp/x.png")'`.
+
+## Unity and package traps
+
+- Never name a private method `Reset`, `Awake`, `OnValidate` or another Unity message by accident. A helper called `Reset()` ran when the component was added in the Editor and zeroed a prefab's scale.
+- VContainer overwrites any new file ending in `LifetimeScope.cs` with its template when the `.meta` is created. Rewrite it after the first import.
+- PrimeTween: keep the `Sequence`/`Tween` handle and stop that. `Tween.StopAll(target)` errors on tweens nested in a sequence.
+- Unity's NUnit is 3.5: no `SetArgDisplayNames` or `Has.Exactly(n).Items`.
 
 ## Workflow
 
