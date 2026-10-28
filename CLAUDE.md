@@ -14,6 +14,14 @@ Read both before planning or starting a feature. They are the source of truth; t
 - `ZooWorld.Core` has no engine references. Dependencies point one way: Game → Core.
 - No singletons, static managers or `FindObjectOfType`. Services come from DI (VContainer).
 
+## Unity tooling
+
+The Unity CLI drives the open Editor through `com.unity.pipeline` (verified working). Use the `unity:unity-cli` skill, and pass `--project-path "C:/Users/fyodor.shchukin/Zoo World"` on every call.
+- Compile check: `unity recompile --project-path ... --format json`.
+- Tests: `unity command test run --mode editor|playmode --filter <asm> --filter_type assembly --result-only`. Use this, not `unity test`, which refuses a project that's open in the Editor.
+- Build scenes, prefabs and assets with `unity command` (e.g. `scene get_hierarchy`, `prefab create_variant`, `asset create`), not by hand-editing YAML.
+- If a call stalls, check `unity status`. The Editor may be compiling, in Safe Mode, or need focus.
+
 ## Workflow
 
 - **Plan first**: show the structure, main classes and test plan, then wait for approval before writing code.
