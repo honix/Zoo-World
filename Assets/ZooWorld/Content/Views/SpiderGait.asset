@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: ZooWorld.Game::ZooWorld.Game.Views.GaitPreset
   _cyclesPerMeter: 2.4
   _fullSwingSpeed: 1.5
-  _swingDegrees: 24
+  _swingDegrees: 9
   _stride: 0
   _lift: 0.04
   _blendSharpness: 8
