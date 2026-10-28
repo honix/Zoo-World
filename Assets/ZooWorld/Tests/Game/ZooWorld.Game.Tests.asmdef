@@ -5,7 +5,8 @@
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
         "ZooWorld.Core",
-        "ZooWorld.Game"
+        "ZooWorld.Game",
+        "ZooWorld.Editor"
     ],
     "includePlatforms": [
         "Editor"
