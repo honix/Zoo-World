@@ -6,7 +6,7 @@ A small top-down 3D zoo: frogs hop, snakes slither, predators eat, and a counter
 
 - **Unity 6.3 LTS (6000.3.27f1)**, URP, built-in physics (Rigidbody + colliders), no ECS
 - **VContainer** for DI, **uGUI + TextMeshPro** for UI, **PrimeTween** for view animations only
-- Unity Test Framework: **99 tests** (EditMode + PlayMode), including a headless simulation
+- Unity Test Framework: **107 tests** (EditMode + PlayMode), including a headless simulation
 
 ## Open and run
 
@@ -69,7 +69,7 @@ graph TD
     Registry -->|Died| Stats[DeathStats] --> Presenter[DeathCounterPresenter] --> View[DeathCounterView]
     Registry -->|Died| Population
     Collisions -->|Eaten| Labels[TastyLabelPresenter]
-    Animal -.->|Spawned / Ate / Died / Jumped / Landed| Views[AnimalView, HopView, SlitherView]
+    Animal -.->|Spawned / Ate / Died / Redirected / Jumped / Landed| Views[AnimalView, TurnView, HopView, SlitherView]
 ```
 
 - **Content is authored in the Editor, systems are wired in code.** The scene holds the camera, light, HUD canvas, an `Arena` prefab instance and one `ZooLifetimeScope` with references to configs. Services, the spawner, pools and animals are all created by `ZooInstaller`. There are no singletons, static managers or `Find*` calls.
@@ -85,9 +85,10 @@ graph TD
 
 Views react to events and never feed anything back:
 
-- `AnimalView` (on every animal): pop-in on spawn, punch on eat, swell-spin-shrink on death.
+- `AnimalView` (on every animal): pop-in on spawn, punch on eat, a squash on bumps, a pulse when turned back at the screen edge, swell-spin-shrink on death.
+- `TurnView` (on every animal): eases the look towards the heading instead of snapping, and leans into turns. Physics keeps its own rotation.
 - `HopView`: hop arc plus squash and stretch, for any movement exposing `IJumpCues`.
-- `SlitherView`: a travelling wave along the snake's tail, and a head bob.
+- `SlitherView`: each tail segment follows the path the head has travelled (`PathTrail`), so turns flow down the body. A travelling wave sways the segments across the path, and the head bobs and shakes on bumps.
 - `TastyLabel`: pop, float and fade. The counter numbers punch when they change.
 
 All timings, scales and `AnimationCurve`s live in ScriptableObject presets (`Content/Views`), which animals can share or override. Views are optional: the headless simulation runs without them.
@@ -145,7 +146,7 @@ Where the spec is open, I picked the simplest reasonable option:
 | Assembly | Mode | What |
 |---|---|---|
 | `ZooWorld.Core.Tests` | EditMode | Diet and food chain rules, tie-break, each pair processed once and order-independent, registry, stats, spawn timer intervals, weighted strategy, random streams |
-| `ZooWorld.Game.Tests` | EditMode | Linear, jump and zig-zag movement math; off-screen steering; camera play area; config → Core mapping; **content contracts** for every `AnimalConfig` and `WorldSettings` in the project; the Create Animal tooling |
+| `ZooWorld.Game.Tests` | EditMode | Linear, jump and zig-zag movement math; off-screen steering; camera play area; path trail sampling; redirect events; config → Core mapping; **content contracts** for every `AnimalConfig` and `WorldSettings` in the project; the Create Animal tooling |
 | `ZooWorld.Game.PlayModeTests` | PlayMode | **Smoke:** in the real scene a predator eats a prey, then the counter and a "Tasty!" label update. **Headless simulation:** 2 simulated minutes with a fixed seed (see below). **Replay:** the same seed gives the same sequence of meals |
 
 The contract tests iterate over all content assets, so new animals and world presets are covered without writing tests.
