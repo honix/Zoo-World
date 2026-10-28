@@ -22,5 +22,7 @@ MonoBehaviour:
     Weight: 1
   - Animal: {fileID: 11400000, guid: 677fc50de6db76d4bb29c451ae5aabdf, type: 2}
     Weight: 0.6
+  - Animal: {fileID: 11400000, guid: 074967a30ffdc564191f5f1aa2b85f50, type: 2}
+    Weight: 0.6
   _screenMargin: 0.5
   _spawnMargin: 1.5
