@@ -8,7 +8,7 @@ namespace ZooWorld.Game.Movement
     /// Every <c>interval</c> seconds, jumps a fixed distance over <c>duration</c> seconds,
     /// then sits still. The hop arc is purely visual; logic moves on the ground plane.
     /// </summary>
-    public sealed class JumpMovement : IMovement
+    public sealed class JumpMovement : IMovement, IJumpCues
     {
         private const float Arrived = 1e-4f;
 
