@@ -7,7 +7,8 @@ namespace ZooWorld.Game.Views
 {
     /// <summary>
     /// Generic look-and-feel for any animal, on its Visual object: pops in on spawn,
-    /// punches when it eats, poofs when it dies. It only listens to the animal's events;
+    /// punches when it eats, squashes on bumps, pulses when turned back at the screen edge,
+    /// poofs when it dies. It only listens to the animal's events;
     /// logic never waits for it, except the pool for the death animation.
     /// </summary>
     [DisallowMultipleComponent]
@@ -28,6 +29,7 @@ namespace ZooWorld.Game.Views
 
             _animal.Spawned += OnSpawned;
             _animal.Ate += OnAte;
+            _animal.Redirected += OnRedirected;
         }
 
         private void OnDestroy()
@@ -37,6 +39,7 @@ namespace ZooWorld.Game.Views
 
             _animal.Spawned -= OnSpawned;
             _animal.Ate -= OnAte;
+            _animal.Redirected -= OnRedirected;
         }
 
         public void Play(Action onFinished)
@@ -62,6 +65,26 @@ namespace ZooWorld.Game.Views
         {
             Rest();
             _animation = Sequence.Create(Tween.PunchScale(transform, _preset.EatPunch, _preset.EatDuration));
+        }
+
+        private void OnRedirected(Redirect redirect)
+        {
+            if (redirect.Cause == RedirectCause.Bump)
+            {
+                Punch(_preset.BumpPunch, _preset.BumpDuration);
+            }
+            else if (Mathf.Abs(redirect.Angle) >= _preset.EdgeTurnMinAngle)
+            {
+                Punch(_preset.EdgeTurnPunch, _preset.EdgeTurnDuration);
+            }
+        }
+
+        private void Punch(Vector3 strength, float duration)
+        {
+            // Never cut the pop-in short: a bump right after spawning just skips the punch.
+            if (_animation.isAlive) return;
+
+            _animation = Sequence.Create(Tween.PunchScale(transform, strength, duration));
         }
 
         private void Rest()
