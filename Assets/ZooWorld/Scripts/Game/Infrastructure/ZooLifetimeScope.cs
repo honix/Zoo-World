@@ -2,6 +2,7 @@ using UnityEngine;
 using VContainer;
 using VContainer.Unity;
 using ZooWorld.Game.Configs;
+using ZooWorld.Game.UI;
 using ZooWorld.Game.World;
 
 namespace ZooWorld.Game.Infrastructure
@@ -15,10 +16,18 @@ namespace ZooWorld.Game.Infrastructure
         [SerializeField] private WorldSettings _settings;
         [SerializeField] private Camera _camera;
 
+        [Header("UI")]
+        [SerializeField] private DeathCounterView _deathCounter;
+        [SerializeField] private TastyLabel _tastyLabelPrefab;
+
         protected override void Configure(IContainerBuilder builder)
         {
             var playArea = new CameraPlayArea(_camera, _settings.ScreenMargin, _settings.SpawnMargin);
             new ZooInstaller(_settings, playArea).Install(builder);
+
+            builder.RegisterComponent(_deathCounter);
+            builder.RegisterEntryPoint<DeathCounterPresenter>();
+            builder.RegisterEntryPoint<TastyLabelPresenter>().WithParameter(_tastyLabelPrefab);
         }
 
         private void OnDrawGizmos()
