@@ -40,7 +40,7 @@ namespace ZooWorld.Game.World
                 var animal = animals[i];
                 if (_steering.TrySteer(bounds, animal.Position, animal.Movement.Heading, out var heading))
                 {
-                    animal.Movement.Steer(heading);
+                    animal.Steer(heading);
                 }
 
                 animal.Tick(deltaTime);

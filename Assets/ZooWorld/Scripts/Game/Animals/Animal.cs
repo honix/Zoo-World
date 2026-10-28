@@ -31,6 +31,9 @@ namespace ZooWorld.Game.Animals
         public event Action Ate;
         public event Action Died;
 
+        /// <summary>Raised when the screen edge or a bump changes the heading, for views to react.</summary>
+        public event Action<Redirect> Redirected;
+
         public AnimalId Id { get; private set; }
         public AnimalConfig Config { get; private set; }
         public IMovement Movement { get; private set; }
@@ -75,6 +78,22 @@ namespace ZooWorld.Game.Animals
 
             var facing = Quaternion.LookRotation(Movement.Heading);
             _body.MoveRotation(Quaternion.RotateTowards(_body.rotation, facing, _turnSpeed * deltaTime));
+        }
+
+        /// <summary>Turns the animal back towards the play area.</summary>
+        public void Steer(Vector3 heading)
+        {
+            var before = Movement.Heading;
+            Movement.Steer(heading);
+            Redirected?.Invoke(new Redirect(RedirectCause.ScreenEdge, Vector3.SignedAngle(before, Movement.Heading, Vector3.up)));
+        }
+
+        /// <summary>Physics has just bounced the animal; its movement follows the bounce.</summary>
+        public void Bump()
+        {
+            var before = Movement.Heading;
+            Movement.OnBumped(this);
+            Redirected?.Invoke(new Redirect(RedirectCause.Bump, Vector3.SignedAngle(before, Movement.Heading, Vector3.up)));
         }
 
         public void NotifyAte() => Ate?.Invoke();

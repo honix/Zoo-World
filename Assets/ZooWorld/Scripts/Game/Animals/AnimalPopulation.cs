@@ -49,7 +49,7 @@ namespace ZooWorld.Game.Animals
         {
             if (other == null)
             {
-                self.Movement.OnBumped(self);
+                self.Bump();
                 return;
             }
 
@@ -59,7 +59,7 @@ namespace ZooWorld.Game.Animals
             _collisions.Report(self.Id, other.Id);
 
             // Still alive and nobody was eaten: physics bounced us, follow the bounce.
-            if (self.IsAlive && other.IsAlive) self.Movement.OnBumped(self);
+            if (self.IsAlive && other.IsAlive) self.Bump();
         }
 
         public void Dispose()
