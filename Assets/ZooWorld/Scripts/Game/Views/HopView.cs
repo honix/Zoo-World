@@ -18,6 +18,7 @@ namespace ZooWorld.Game.Views
         private IJumpCues _cues;
         private Vector3 _restPosition;
         private Vector3 _restScale;
+        private Sequence _animation;
 
         private void Awake()
         {
@@ -31,6 +32,7 @@ namespace ZooWorld.Game.Views
 
         private void OnDestroy()
         {
+            if (_animation.isAlive) _animation.Stop();
             Unsubscribe();
             if (_animal == null) return;
 
@@ -54,20 +56,21 @@ namespace ZooWorld.Game.Views
         {
             Rest();
             var duration = _cues.JumpDuration;
-            Tween.LocalPositionY(transform, _restPosition.y, _restPosition.y + _preset.Height, duration, _preset.Arc);
-            Tween.Scale(transform, Vector3.Scale(_restScale, _preset.TakeOffStretch), _preset.TakeOffDuration, Ease.OutQuad)
+            var stretch = Sequence.Create(Tween.Scale(transform, Vector3.Scale(_restScale, _preset.TakeOffStretch), _preset.TakeOffDuration, Ease.OutQuad))
                 .Chain(Tween.Scale(transform, _restScale, Mathf.Max(0.01f, duration - _preset.TakeOffDuration), Ease.InOutSine));
+            _animation = Sequence.Create(Tween.LocalPositionY(transform, _restPosition.y, _restPosition.y + _preset.Height, duration, _preset.Arc))
+                .Group(stretch);
         }
 
         private void OnLanded()
         {
             Rest();
-            Tween.Scale(transform, Vector3.Scale(_restScale, _preset.LandingSquash), _restScale, _preset.LandingDuration, Ease.OutBack);
+            _animation = Sequence.Create(Tween.Scale(transform, Vector3.Scale(_restScale, _preset.LandingSquash), _restScale, _preset.LandingDuration, Ease.OutBack));
         }
 
         private void Rest()
         {
-            Tween.StopAll(transform);
+            if (_animation.isAlive) _animation.Stop();
             transform.localPosition = _restPosition;
             transform.localScale = _restScale;
         }

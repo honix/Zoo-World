@@ -25,7 +25,11 @@ namespace ZooWorld.Game.UI
                 createFunc: () => Object.Instantiate(prefab, _root),
                 actionOnGet: label => label.gameObject.SetActive(true),
                 actionOnRelease: label => label.gameObject.SetActive(false),
-                actionOnDestroy: label => Object.Destroy(label.gameObject),
+                actionOnDestroy: label =>
+                {
+                    // On scene unload the labels may already be gone.
+                    if (label != null) Object.Destroy(label.gameObject);
+                },
                 collectionCheck: false);
         }
 

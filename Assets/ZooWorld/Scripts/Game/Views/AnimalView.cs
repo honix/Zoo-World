@@ -18,6 +18,7 @@ namespace ZooWorld.Game.Views
         private Animal _animal;
         private Vector3 _restScale;
         private Quaternion _restRotation;
+        private Sequence _animation;
 
         private void Awake()
         {
@@ -31,6 +32,7 @@ namespace ZooWorld.Game.Views
 
         private void OnDestroy()
         {
+            if (_animation.isAlive) _animation.Stop();
             if (_animal == null) return;
 
             _animal.Spawned -= OnSpawned;
@@ -39,34 +41,32 @@ namespace ZooWorld.Game.Views
 
         public void Play(Action onFinished)
         {
-            Reset();
+            Rest();
             var spin = _restRotation * Quaternion.Euler(0f, _preset.DeathSpinDegrees, 0f);
-            Sequence.Create()
-                .Group(Tween.Scale(transform, _restScale, Vector3.zero, _preset.DeathDuration, _preset.DeathShrink))
+            _animation = Sequence.Create(Tween.Scale(transform, _restScale, Vector3.zero, _preset.DeathDuration, _preset.DeathShrink))
                 .Group(Tween.LocalRotation(transform, spin, _preset.DeathDuration, Ease.InQuad))
                 .OnComplete(() =>
                 {
-                    Reset();
+                    Rest();
                     onFinished();
                 }, warnIfTargetDestroyed: false);
         }
 
         private void OnSpawned()
         {
-            Reset();
-            Tween.Scale(transform, Vector3.zero, _restScale, _preset.SpawnDuration, _preset.SpawnScale);
+            Rest();
+            _animation = Sequence.Create(Tween.Scale(transform, Vector3.zero, _restScale, _preset.SpawnDuration, _preset.SpawnScale));
         }
 
         private void OnAte()
         {
-            Tween.StopAll(transform);
-            transform.localScale = _restScale;
-            Tween.PunchScale(transform, _preset.EatPunch, _preset.EatDuration);
+            Rest();
+            _animation = Sequence.Create(Tween.PunchScale(transform, _preset.EatPunch, _preset.EatDuration));
         }
 
-        private void Reset()
+        private void Rest()
         {
-            Tween.StopAll(transform);
+            if (_animation.isAlive) _animation.Stop();
             transform.localScale = _restScale;
             transform.localRotation = _restRotation;
         }
