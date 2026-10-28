@@ -28,6 +28,7 @@ Unity 6000.3.27f1, URP, built-in physics, VContainer (DI), uGUI + TextMeshPro, U
 - `AnimalConfig` ScriptableObject: a new animal from existing parts is a new config + prefab variant, with no code changes.
 - Movement is a strategy, using a `MovementSettings` ScriptableObject subclass per type. No enums or switches to edit.
 - Food chain is data: `AnimalTag` assets plus a diet list. One service resolves collisions, and each collision pair is processed once.
+- Assemblies: `ZooWorld.Core` has no engine references (pure rules), and `ZooWorld.Game` references Core only. Dependencies point one way: Game → Core.
 - Thin MonoBehaviours, logic in plain C#. Time and randomness go behind interfaces. Services come from DI, with no singletons or `FindObjectOfType`.
 - Logic emits events and views react. Logic never waits for visuals.
 
