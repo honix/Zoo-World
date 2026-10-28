@@ -23,14 +23,20 @@ namespace ZooWorld.Core.FoodChain
         /// <summary>Raised after the victim is already dead.</summary>
         public event Action<Meal> Eaten;
 
-        public CollisionOutcome Report(AnimalId first, AnimalId second)
+        /// <summary>
+        /// Resolves a contact. The outcome doesn't depend on which collider reported it:
+        /// the pair is always resolved in id order, so a replay with the same seed
+        /// gets the same winners even if the engine reports contacts in another order.
+        /// </summary>
+        public void Report(AnimalId first, AnimalId second)
         {
-            if (first == second) return CollisionOutcome.Bounce;
-            if (!_registry.TryGetProfile(first, out var firstProfile)) return CollisionOutcome.Bounce;
-            if (!_registry.TryGetProfile(second, out var secondProfile)) return CollisionOutcome.Bounce;
+            if (first == second) return;
+            if (second.Value < first.Value) (first, second) = (second, first);
 
-            var outcome = _foodChain.Resolve(firstProfile, secondProfile);
-            switch (outcome)
+            if (!_registry.TryGetProfile(first, out var firstProfile)) return;
+            if (!_registry.TryGetProfile(second, out var secondProfile)) return;
+
+            switch (_foodChain.Resolve(firstProfile, secondProfile))
             {
                 case CollisionOutcome.FirstEatsSecond:
                     Feed(first, second);
@@ -39,8 +45,6 @@ namespace ZooWorld.Core.FoodChain
                     Feed(second, first);
                     break;
             }
-
-            return outcome;
         }
 
         private void Feed(AnimalId eater, AnimalId victim)

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
 using ZooWorld.Core.Animals;
 using ZooWorld.Core.FoodChain;
@@ -43,10 +44,10 @@ namespace ZooWorld.Core.Tests
             var a = _registry.Register(Zoo.Frog());
             var b = _registry.Register(Zoo.Frog());
 
-            var outcome = _collisions.Report(a, b);
+            _collisions.Report(a, b);
 
-            Assert.That(outcome, Is.EqualTo(CollisionOutcome.Bounce));
             Assert.That(_deaths, Is.Empty);
+            Assert.That(_meals, Is.Empty);
         }
 
         [Test]
@@ -63,6 +64,27 @@ namespace ZooWorld.Core.Tests
             Assert.That(_deaths, Has.Count.EqualTo(1));
             Assert.That(_meals, Has.Count.EqualTo(1));
             Assert.That(_registry.IsAlive(a) ^ _registry.IsAlive(b), Is.True, "exactly one predator survives");
+        }
+
+        [Test]
+        public void Outcome_DoesNotDependOnReportOrder()
+        {
+            // The engine may report the same contact as (a, b) or (b, a).
+            // With a tie-breaker that always favours "first", both orders must agree.
+            var survivors = new[] { false, true }.Select(reverse =>
+            {
+                var registry = new AnimalRegistry();
+                var collisions = new CollisionService(registry, new DietFoodChain(new FixedTieBreaker(firstWins: true)));
+                var a = registry.Register(Zoo.Snake());
+                var b = registry.Register(Zoo.Snake());
+
+                if (reverse) collisions.Report(b, a);
+                else collisions.Report(a, b);
+
+                return registry.IsAlive(a) ? a : b;
+            }).ToArray();
+
+            Assert.That(survivors[1], Is.EqualTo(survivors[0]));
         }
 
         [Test]
