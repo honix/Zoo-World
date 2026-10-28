@@ -106,6 +106,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5982121935871316933}
   - component: {fileID: 8718021411847977855}
+  - component: {fileID: 5842755694663508879}
   m_Layer: 0
   m_Name: Visual
   m_TagString: Untagged
@@ -141,3 +142,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: ZooWorld.Game::ZooWorld.Game.Views.AnimalView
   _preset: {fileID: 11400000, guid: b1e388637441da245b8ccb5b2c21a412, type: 2}
+--- !u!114 &5842755694663508879
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1929186860009785616}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a8ab4f4b9aae2a4799b9cf292d43fd9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ZooWorld.Game::ZooWorld.Game.Views.TurnView
+  _preset: {fileID: 11400000, guid: 925c07d076367994694a002e98e6cdf5, type: 2}
