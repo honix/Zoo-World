@@ -105,6 +105,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5982121935871316933}
+  - component: {fileID: 8718021411847977855}
   m_Layer: 0
   m_Name: Visual
   m_TagString: Untagged
@@ -127,3 +128,16 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2747434817782332602}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8718021411847977855
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1929186860009785616}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f12b90fb8fc4f404e96bf43d4a8182ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ZooWorld.Game::ZooWorld.Game.Views.AnimalView
+  _preset: {fileID: 11400000, guid: b1e388637441da245b8ccb5b2c21a412, type: 2}

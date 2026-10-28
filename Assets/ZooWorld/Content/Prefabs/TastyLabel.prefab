@@ -227,4 +227,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: ZooWorld.Game::ZooWorld.Game.UI.TastyLabel
   _offset: {x: 0, y: 1.2, z: -1}
-  _lifetime: 1.2
+  _preset: {fileID: 11400000, guid: c70710e962e6cee40b725b9be196f13c, type: 2}
+  _text: {fileID: 2124384092334103808}

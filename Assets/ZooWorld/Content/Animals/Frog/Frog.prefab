@@ -459,6 +459,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5044561190720756984}
+  - component: {fileID: 9095057579594504414}
   m_Layer: 0
   m_Name: Body
   m_TagString: Untagged
@@ -489,6 +490,19 @@ Transform:
   - {fileID: 5853136012374920535}
   m_Father: {fileID: 1614148712644542508}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9095057579594504414
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5031374091765749187}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6fd33f931ec01404ca330166dfeb19cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ZooWorld.Game::ZooWorld.Game.Views.HopView
+  _preset: {fileID: 11400000, guid: bfa65bfb8699b9844a43bdfc4e0802bf, type: 2}
 --- !u!1 &5202477791780118605
 GameObject:
   m_ObjectHideFlags: 0

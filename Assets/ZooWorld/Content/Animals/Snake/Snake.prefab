@@ -1227,10 +1227,40 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5982121935871316933, guid: 47ad243a0d0130d4cbcda3cc407d8ae3, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8520615008014710053}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1929186860009785616, guid: 47ad243a0d0130d4cbcda3cc407d8ae3, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6850819314963812727}
   m_SourcePrefab: {fileID: 100100000, guid: 47ad243a0d0130d4cbcda3cc407d8ae3, type: 3}
 --- !u!4 &1956020084995271052 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5982121935871316933, guid: 47ad243a0d0130d4cbcda3cc407d8ae3, type: 3}
   m_PrefabInstance: {fileID: 5197692541117577801}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &5972952785321112409 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1929186860009785616, guid: 47ad243a0d0130d4cbcda3cc407d8ae3, type: 3}
+  m_PrefabInstance: {fileID: 5197692541117577801}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6850819314963812727
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5972952785321112409}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69fb1f600d9269642a8f7012de642805, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ZooWorld.Game::ZooWorld.Game.Views.SlitherView
+  _preset: {fileID: 11400000, guid: db5f3db054e72b04eb39651b08f57012, type: 2}
+  _head: {fileID: 8156496617230221834}
+  _segments:
+  - {fileID: 7750598416139785592}
+  - {fileID: 9177737523946882221}
+  - {fileID: 1623395654081280958}
+  - {fileID: 101634438603126527}
+  - {fileID: 7449136744461568850}
+  - {fileID: 1326231376596226431}
+  - {fileID: 7346698625122441760}
