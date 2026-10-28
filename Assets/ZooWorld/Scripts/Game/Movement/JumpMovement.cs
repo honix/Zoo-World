@@ -27,6 +27,7 @@ namespace ZooWorld.Game.Movement
             _interval = interval;
             _distance = distance;
             _jumpSpeed = distance / duration;
+            JumpDuration = duration;
             _maxTurnDegrees = maxTurnDegrees;
             _random = random;
 
@@ -39,6 +40,8 @@ namespace ZooWorld.Game.Movement
         public event Action Landed;
 
         public Vector3 Heading { get; private set; }
+
+        public float JumpDuration { get; }
 
         public bool IsJumping { get; private set; }
 

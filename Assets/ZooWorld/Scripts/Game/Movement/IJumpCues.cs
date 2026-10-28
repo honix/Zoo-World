@@ -7,5 +7,8 @@ namespace ZooWorld.Game.Movement
     {
         event Action Jumped;
         event Action Landed;
+
+        /// <summary>How long one jump lasts, so a view can match its hop to it.</summary>
+        float JumpDuration { get; }
     }
 }
