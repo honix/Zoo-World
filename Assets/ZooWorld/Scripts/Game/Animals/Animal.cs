@@ -40,16 +40,14 @@ namespace ZooWorld.Game.Animals
             set => _body.linearVelocity = Planar.Flatten(value);
         }
 
-        private void Awake()
-        {
-            _body = GetComponent<Rigidbody>();
-            _colliders = GetComponentsInChildren<Collider>(true);
-            _deathAnimations = GetComponentsInChildren<IDeathAnimation>(true);
-        }
+        private void Awake() => CacheComponents();
 
         public void Activate(AnimalId id, AnimalConfig config, IMovement movement,
             IAnimalContactListener contacts, Vector3 position)
         {
+            // Awake doesn't run for objects created in Edit mode (e.g. contract tests).
+            if (_body == null) CacheComponents();
+
             Id = id;
             Config = config;
             Movement = movement;
@@ -112,6 +110,13 @@ namespace ZooWorld.Game.Animals
 
             var other = collision.rigidbody != null ? collision.rigidbody.GetComponent<Animal>() : null;
             _contacts.OnContact(this, other);
+        }
+
+        private void CacheComponents()
+        {
+            _body = GetComponent<Rigidbody>();
+            _colliders = GetComponentsInChildren<Collider>(true);
+            _deathAnimations = GetComponentsInChildren<IDeathAnimation>(true);
         }
 
         private void SetCollidersEnabled(bool isEnabled)
