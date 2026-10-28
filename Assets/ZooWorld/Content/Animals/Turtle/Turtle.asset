@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59dc9753b2e1126439dcb8011ecfc0e3, type: 3}
+  m_Name: Turtle
+  m_EditorClassIdentifier: ZooWorld.Game::ZooWorld.Game.Configs.AnimalConfig
+  _prefab: {fileID: 7624172336955111791, guid: cc6766500ac09a64abd560648592d02a, type: 3}
+  _tags:
+  - {fileID: 11400000, guid: fc570672dcc43a54a854c21b4650b417, type: 2}
+  - {fileID: 11400000, guid: c77cc535153b6834d9592d204aa427e4, type: 2}
+  _diet: []
+  _movement: {fileID: 11400000, guid: db3fa30d6f8be3a42adb9fa3cfaac90d, type: 2}
