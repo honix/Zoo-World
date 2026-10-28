@@ -1462,8 +1462,38 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5982121935871316933, guid: 47ad243a0d0130d4cbcda3cc407d8ae3, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1302885794650099417}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1929186860009785616, guid: 47ad243a0d0130d4cbcda3cc407d8ae3, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3620518710104582832}
   m_SourcePrefab: {fileID: 100100000, guid: 47ad243a0d0130d4cbcda3cc407d8ae3, type: 3}
+--- !u!1 &1303260704374977268 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1929186860009785616, guid: 47ad243a0d0130d4cbcda3cc407d8ae3, type: 3}
+  m_PrefabInstance: {fileID: 636069190322813924}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3620518710104582832
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1303260704374977268}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2610834b80ca01b4dbb81050ee1f1c57, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ZooWorld.Game::ZooWorld.Game.Views.LegGaitView
+  _preset: {fileID: 11400000, guid: cbf4fcb343e895f4bb7bbc0081ffc20e, type: 2}
+  _legs:
+  - Hip: {fileID: 5760996974155019651}
+    Phase: 0
+  - Hip: {fileID: 5640464218963042409}
+    Phase: 0
+  - Hip: {fileID: 83616892874909890}
+    Phase: 0.5
+  - Hip: {fileID: 8375129158787303313}
+    Phase: 0.5
 --- !u!4 &6617760076950956065 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5982121935871316933, guid: 47ad243a0d0130d4cbcda3cc407d8ae3, type: 3}
