@@ -11,6 +11,7 @@ using ZooWorld.Core.Stats;
 using ZooWorld.Game.Animals;
 using ZooWorld.Game.Configs;
 using ZooWorld.Game.Infrastructure;
+using ZooWorld.Game.Movement;
 using ZooWorld.Game.World;
 
 namespace ZooWorld.Game.PlayModeTests
@@ -30,6 +31,7 @@ namespace ZooWorld.Game.PlayModeTests
         private static readonly GroundRect Visible = new GroundRect(-14f, -8f, 14f, 8f);
 
         private readonly List<IObjectResolver> _containers = new List<IObjectResolver>();
+        private readonly List<Object> _created = new List<Object>();
         private SimulationMode _previousSimulationMode;
 
         [SetUp]
@@ -44,6 +46,8 @@ namespace ZooWorld.Game.PlayModeTests
         {
             foreach (var container in _containers) container.Dispose();
             _containers.Clear();
+            foreach (var asset in _created) Object.DestroyImmediate(asset);
+            _created.Clear();
             Physics.simulationMode = _previousSimulationMode;
         }
 
@@ -92,7 +96,7 @@ namespace ZooWorld.Game.PlayModeTests
 
         private IObjectResolver Build(int seed)
         {
-            var settings = LoadDefaultWorld();
+            var settings = BuildTestWorld();
             var installer = new ZooInstaller(settings, new FixedPlayArea(Visible, settings.ScreenMargin, settings.SpawnMargin))
             {
                 Seed = seed,
@@ -107,15 +111,65 @@ namespace ZooWorld.Game.PlayModeTests
             return container;
         }
 
-        private static WorldSettings LoadDefaultWorld()
+        /// <summary>
+        /// The spec's zoo (frogs and snakes, one spawn every 1-2 s) built in code with default tuning,
+        /// so editing the shipped content can't change what this test checks.
+        /// Only the base prefab is shared: it is the physics every animal really has.
+        /// </summary>
+        private WorldSettings BuildTestWorld()
         {
 #if UNITY_EDITOR
-            return UnityEditor.AssetDatabase.LoadAssetAtPath<WorldSettings>("Assets/ZooWorld/Content/Settings/DefaultWorld.asset");
+            var prefab = UnityEditor.AssetDatabase.LoadAssetAtPath<Animal>("Assets/ZooWorld/Content/Prefabs/AnimalBase.prefab");
+            var animal = Create<AnimalTag>("Animal");
+            var frog = Create<AnimalConfig>("Frog");
+            var snake = Create<AnimalConfig>("Snake");
+            Configure(frog, prefab, new[] { animal }, new AnimalTag[0], Create<JumpMovementSettings>("FrogJump"));
+            Configure(snake, prefab, new[] { animal }, new[] { animal }, Create<LinearMovementSettings>("SnakeCrawl"));
+
+            var world = Create<WorldSettings>("TestWorld");
+            var table = new UnityEditor.SerializedObject(world).FindProperty("_spawnTable");
+            table.arraySize = 2;
+            SetEntry(table.GetArrayElementAtIndex(0), frog);
+            SetEntry(table.GetArrayElementAtIndex(1), snake);
+            table.serializedObject.ApplyModifiedPropertiesWithoutUndo();
+            return world;
 #else
-            Assert.Ignore("Content is loaded through the AssetDatabase; run in the Editor.");
+            Assert.Ignore("The test world is built with the Editor's SerializedObject; run in the Editor.");
             return null;
 #endif
         }
+
+        private T Create<T>(string name) where T : ScriptableObject
+        {
+            var asset = ScriptableObject.CreateInstance<T>();
+            asset.name = name;
+            _created.Add(asset);
+            return asset;
+        }
+
+#if UNITY_EDITOR
+        private static void Configure(AnimalConfig config, Animal prefab, AnimalTag[] tags, AnimalTag[] diet, MovementSettings movement)
+        {
+            var serialized = new UnityEditor.SerializedObject(config);
+            serialized.FindProperty("_prefab").objectReferenceValue = prefab;
+            serialized.FindProperty("_movement").objectReferenceValue = movement;
+            Fill(serialized.FindProperty("_tags"), tags);
+            Fill(serialized.FindProperty("_diet"), diet);
+            serialized.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        private static void Fill(UnityEditor.SerializedProperty array, Object[] items)
+        {
+            array.arraySize = items.Length;
+            for (var i = 0; i < items.Length; i++) array.GetArrayElementAtIndex(i).objectReferenceValue = items[i];
+        }
+
+        private static void SetEntry(UnityEditor.SerializedProperty entry, AnimalConfig animal)
+        {
+            entry.FindPropertyRelative(nameof(WorldSettings.SpawnTableEntry.Animal)).objectReferenceValue = animal;
+            entry.FindPropertyRelative(nameof(WorldSettings.SpawnTableEntry.Weight)).floatValue = 1f;
+        }
+#endif
 
         /// <summary>One simulated zoo plus the bookkeeping the invariants need.</summary>
         private sealed class Run

@@ -1,3 +1,4 @@
+using System.IO;
 using System.Linq;
 using NUnit.Framework;
 using UnityEditor;
@@ -6,6 +7,7 @@ using ZooWorld.Editor;
 using ZooWorld.Game.Animals;
 using ZooWorld.Game.Configs;
 using ZooWorld.Game.Movement;
+using ZooWorld.Game.Tests.Fakes;
 
 namespace ZooWorld.Game.Tests
 {
@@ -20,13 +22,16 @@ namespace ZooWorld.Game.Tests
         [Test]
         public void CreatesAValidAnimalFromExistingParts()
         {
+            // The tag and movement are the test's own, so renaming or retuning content can't break it.
+            // The base prefab is the one the wizard really uses.
+            AssetDatabase.CreateFolder(Path.GetDirectoryName(Folder)?.Replace('\\', '/'), Path.GetFileName(Folder));
             var blueprint = new AnimalBlueprint
             {
                 Name = "Turtle",
                 Folder = Folder,
-                BasePrefab = Load<Animal>("Assets/ZooWorld/Content/Prefabs/AnimalBase.prefab"),
-                Tags = new[] { Load<AnimalTag>("Assets/ZooWorld/Content/Tags/Animal.asset") },
-                Movement = Load<MovementSettings>("Assets/ZooWorld/Content/Movement/SnakeCrawl.asset")
+                BasePrefab = AssetDatabase.LoadAssetAtPath<Animal>(CreateAnimalWizard.BasePrefabPath),
+                Tags = new[] { Save(TestAssets.Tag("Animal")) },
+                Movement = Save(ScriptableObject.CreateInstance<LinearMovementSettings>())
             };
 
             var config = AnimalAssetCreator.Create(blueprint);
@@ -46,6 +51,10 @@ namespace ZooWorld.Game.Tests
             Assert.Throws<System.ArgumentException>(() => AnimalAssetCreator.Create(blueprint));
         }
 
-        private static T Load<T>(string path) where T : Object => AssetDatabase.LoadAssetAtPath<T>(path);
+        private static T Save<T>(T asset) where T : ScriptableObject
+        {
+            AssetDatabase.CreateAsset(asset, $"{Folder}/{typeof(T).Name}.asset");
+            return asset;
+        }
     }
 }

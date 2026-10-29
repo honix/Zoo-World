@@ -13,7 +13,7 @@ namespace ZooWorld.Editor
     /// </summary>
     public sealed class CreateAnimalWizard : ScriptableWizard
     {
-        private const string BasePrefabPath = "Assets/ZooWorld/Content/Prefabs/AnimalBase.prefab";
+        public const string BasePrefabPath = "Assets/ZooWorld/Content/Prefabs/AnimalBase.prefab";
 
         [Tooltip("Used for the folder, the prefab and the config.")]
         [SerializeField] private string _name = "NewAnimal";

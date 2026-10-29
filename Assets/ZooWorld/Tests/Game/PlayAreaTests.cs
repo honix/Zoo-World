@@ -8,18 +8,26 @@ namespace ZooWorld.Game.Tests
     public class PlayAreaTests
     {
         private Camera _camera;
+        private RenderTexture _target;
 
         [SetUp]
         public void SetUp()
         {
+            // A fixed-size target, so viewport rays don't depend on the Editor's Game view size.
+            _target = new RenderTexture(2000, 1000, 0);
             _camera = new GameObject("Test Camera").AddComponent<Camera>();
             _camera.transform.SetPositionAndRotation(new Vector3(3f, 10f, -2f), Quaternion.Euler(90f, 0f, 0f));
+            _camera.targetTexture = _target;
             _camera.fieldOfView = 60f;
             _camera.aspect = 2f;
         }
 
         [TearDown]
-        public void TearDown() => Object.DestroyImmediate(_camera.gameObject);
+        public void TearDown()
+        {
+            Object.DestroyImmediate(_camera.gameObject);
+            Object.DestroyImmediate(_target);
+        }
 
         [Test]
         public void TopDownCamera_SeesTheExpectedGround()
