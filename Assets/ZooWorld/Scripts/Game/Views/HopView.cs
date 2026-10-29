@@ -27,7 +27,7 @@ namespace ZooWorld.Game.Views
             _restScale = transform.localScale;
 
             _animal.Spawned += OnSpawned;
-            _animal.Died += Unsubscribe;
+            _animal.Died += OnDied;
         }
 
         private void OnDestroy()
@@ -37,7 +37,7 @@ namespace ZooWorld.Game.Views
             if (_animal == null) return;
 
             _animal.Spawned -= OnSpawned;
-            _animal.Died -= Unsubscribe;
+            _animal.Died -= OnDied;
         }
 
         private void OnSpawned()
@@ -50,6 +50,12 @@ namespace ZooWorld.Game.Views
 
             _cues.Jumped += OnJumped;
             _cues.Landed += OnLanded;
+        }
+
+        private void OnDied()
+        {
+            if (_animation.isAlive) _animation.Stop();
+            Unsubscribe();
         }
 
         private void OnJumped()
