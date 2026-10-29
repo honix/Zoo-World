@@ -30,7 +30,7 @@ To try the extended zoo (adds a turtle and a spider), select the `Zoo` object in
 | Frog: prey, jumps a fixed distance every X s | `Frog` config + `JumpMovementSettings` (interval, distance, duration) |
 | Snake: predator, linear movement | `Snake` config (diet `[Animal]`) + `LinearMovementSettings` (speed) |
 | Dead prey / predator counter, top right, uGUI | `DeathStats` → `DeathCounterPresenter` → `DeathCounterView` (uGUI Canvas + TMP) |
-| DI / frameworks / patterns | VContainer composition root, MVP, strategy, factory + object pool, adapters |
+| DI / frameworks / patterns | VContainer composition root, MVP, strategy, factory + object pool, adapters. See [Docs/Patterns.md](Docs/Patterns.md) |
 
 ## Architecture
 
