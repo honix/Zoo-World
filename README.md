@@ -100,7 +100,7 @@ Most new animals should be the first kind: **content only**.
 
 ### 1. From existing parts: no code
 
-> Example: the Turtle, commit `09f0240` (assets only)
+> Example: the Turtle, commit `f1e6b80` (assets only)
 
 1. **Zoo World → Create Animal…**: name it, pick tags (e.g. `Animal`, `Reptile`), a diet (empty means prey) and a movement asset (e.g. a new `LinearMovementSettings` asset with speed 0.8). Optionally add it to a world's spawn table.
 2. The wizard creates `Content/Animals/<Name>/` with a prefab variant of `AnimalBase` and an `AnimalConfig` that points at it.
@@ -110,13 +110,13 @@ The content contract tests pick the new animal up automatically: valid config, c
 
 ### 2. With a new movement: one new class
 
-> Example: zig-zag movement, commit `fd06657` (one file). Used by the Spider.
+> Example: zig-zag movement, commit `11da1e5` (one file). Used by the Spider.
 
 Create a `MovementSettings` subclass whose `CreateMovement()` returns your `IMovement`, then create an asset of it and reference it from a config. There's no enum, switch or factory to edit, and settings assets can be shared between animals. Implement `IJumpCues` if views should react to jumps.
 
 ### 3. With new diet relations: tags only
 
-> Example: the Spider eats frogs but not snakes, commit `b3bc13d` (assets only)
+> Example: the Spider eats frogs but not snakes, commit `6880914` (assets only)
 
 Diets are lists of tags, so new relations are data:
 - Create an `Arachnid` tag.

@@ -4,9 +4,9 @@ A small top-down 3D zoo in Unity, built around an extensible animal architecture
 
 ## Docs
 
-Read both before planning or starting a feature. They are the source of truth; this file doesn't repeat them.
-- `Docs/Zoo world_2026.pdf` is the spec with the gameplay requirements. Check every point against it at the end.
-- `Docs/Prompts/zoo-world-prompt.md` is the brief: tech stack, architecture, tests, README and definition of done.
+The original spec and brief are kept locally in `Docs/Private/`, which is git-ignored: the repo is public, and they must never be committed or quoted. Read both before planning or starting a feature. They are the source of truth; this file doesn't repeat them.
+- `Docs/Private/Zoo world_2026.pdf` is the spec with the gameplay requirements. Check every point against it at the end.
+- `Docs/Private/zoo-world-prompt.md` is the brief: tech stack, architecture, tests, README and definition of done.
 
 ## Guardrails
 
