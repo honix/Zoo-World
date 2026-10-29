@@ -6,7 +6,7 @@ A small top-down 3D zoo: frogs hop, snakes slither, predators eat, and a counter
 
 - **Unity 6.3 LTS (6000.3.27f1)**, URP, built-in physics (Rigidbody + colliders), no ECS
 - **VContainer** for DI, **uGUI + TextMeshPro** for UI, **PrimeTween** for view animations only
-- Unity Test Framework: **110 tests** (EditMode + PlayMode), including a headless simulation
+- Unity Test Framework: **102 tests** (EditMode + PlayMode), including a headless simulation
 
 ## Open and run
 

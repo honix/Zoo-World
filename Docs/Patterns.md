@@ -84,17 +84,19 @@ There's no `Animal → Predator → Snake` hierarchy. An `Animal` is put togethe
 
 ### Content validation (contract tests)
 
-`Tests/Game/ContentContractTests.cs` tests the content, not the code. It searches the project for every `AnimalConfig` and `WorldSettings` asset and runs each check once per asset, so a new animal is covered as soon as it exists.
+`Tests/Game/ContentContractTests.cs` tests the content, not the code. Each test searches the project for every `AnimalConfig` or `WorldSettings` asset when it runs and checks all of them, so a new animal is covered as soon as it exists, even in an Editor that's been open the whole time. A failure lists every broken asset at once, for example `"NewAnimal: the Visual must not change physics, but has colliders on Cube"`.
 
 | Check | Verifies |
 |---|---|
-| `Animal_ConfigIsValid` | prefab and movement are set, there's at least one tag, no empty slots, the movement's values make sense |
-| `Animal_PrefabFollowsTheBaseLayout` | the Rigidbody fits the ground plane, there's a solid collider on the root, a `Visual` child with no colliders, no zero-scale parts |
-| `Animal_CanBeSpawned` | the animal spawns alive, in place, with a valid heading |
-| `World_SettingsAreValid` | spawn timing makes sense and every animal in the table is valid |
+| `Animals_ConfigsAreValid` | prefab and movement are set, there's at least one tag, no empty slots, the movement's values make sense |
+| `Animals_PrefabsFollowTheBaseLayout` | the Rigidbody fits the ground plane, there's a solid collider on the root, a `Visual` child with no colliders, no zero-scale parts |
+| `Animals_CanBeSpawned` | the animal spawns alive, in place, with a valid heading |
+| `Worlds_SettingsAreValid` | spawn timing makes sense and every animal in the table is valid |
 | `DefaultWorld_MatchesTheSpec` | frog and snake only, one spawn every 1–2 s, frog = jumping prey, snake = linear predator |
 
 `ZooSceneSmokeTests` goes one step further: it plays the real scene and checks that a snake really eats a frog.
+
+**Why one test per check, not one per animal:** an earlier version used `[TestCaseSource]` to give each animal its own line in the Test Runner. NUnit builds those cases once, when scripts load, so an animal added in an open Editor wasn't tested until the next script reload. With a thousand animals, a few thousand near-identical rows wouldn't be easier to read anyway. The failure message already names the animal.
 
 **Why:** with "1000 animals", most changes are content made in the Editor, often by designers. These tests catch everyday mistakes, such as a missing tag that makes an animal impossible to eat, or the default collider on a Unity cube left under `Visual`. Adding an animal is data only, and every piece of that data is checked automatically. Studios call this content or asset validation and often run it in CI.
 

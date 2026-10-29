@@ -24,7 +24,7 @@ The Unity CLI drives the open Editor through `com.unity.pipeline` (verified work
 - Compile check: `unity recompile --project-path ... --format json`.
 - Tests: `unity command test run --mode editor --filter <asm> --filter_type assembly --result-only`. Use this, not `unity test`, which refuses a project that's open in the Editor.
   - PlayMode can't run synchronously (the domain reload drops the request): add `--async_tests true`, then poll `unity command test status`.
-  - Contract tests use `TestCaseSource` over assets, which is cached until a domain reload. After adding content, run `EditorUtility.RequestScriptReload()` before testing.
+  - Contract tests scan assets when they run: don't switch them to `TestCaseSource`, whose cases are cached until a domain reload.
   - Assemblies: `ZooWorld.Core.Tests`, `ZooWorld.Game.Tests` (EditMode), `ZooWorld.Game.PlayModeTests`.
 - Build scenes, prefabs and assets in the live Editor, not by hand-editing YAML: use `unity command` or `script eval_file` with a C# script kept outside the repo. Eval wraps code in a method body, so no `using` directives: fully qualify types.
 - If a call stalls, check `unity status`. The Editor may be compiling, in Safe Mode, or need focus.
