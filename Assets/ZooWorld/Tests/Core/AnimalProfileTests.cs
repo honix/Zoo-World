@@ -53,5 +53,15 @@ namespace ZooWorld.Core.Tests
             Assert.That(profile.Tags, Is.EqualTo(new[] { tag }));
             Assert.That(profile.Diet, Is.EqualTo(new[] { tag }));
         }
+
+        [Test]
+        public void TagName_IsForDisplayOnly()
+        {
+            var named = new TagId(7, "Reptile");
+
+            Assert.That(named, Is.EqualTo(new TagId(7)));
+            Assert.That(named.ToString(), Is.EqualTo("Reptile"));
+            Assert.That(new TagId(7).ToString(), Is.EqualTo("Tag#7"));
+        }
     }
 }

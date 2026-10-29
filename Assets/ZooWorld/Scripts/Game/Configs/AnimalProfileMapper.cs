@@ -28,7 +28,7 @@ namespace ZooWorld.Game.Configs
         {
             if (!_tagIds.TryGetValue(tag, out var id))
             {
-                id = new TagId(_tagIds.Count + 1);
+                id = new TagId(_tagIds.Count + 1, tag.name);
                 _tagIds.Add(tag, id);
             }
 

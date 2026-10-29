@@ -31,6 +31,14 @@ namespace ZooWorld.Game.Tests
         }
 
         [Test]
+        public void TagId_IsNamedAfterItsAsset()
+        {
+            var mapper = new AnimalProfileMapper();
+
+            Assert.That(mapper.GetTagId(_animal).ToString(), Is.EqualTo("Animal"));
+        }
+
+        [Test]
         public void Profiles_CarryTheConfiguredFoodChain()
         {
             var mapper = new AnimalProfileMapper();
