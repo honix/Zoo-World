@@ -82,6 +82,22 @@ There's no `Animal → Predator → Snake` hierarchy. An `Animal` is put togethe
 
 **Why:** a new animal mixes existing parts instead of fitting into a class tree.
 
+### Content validation (contract tests)
+
+`Tests/Game/ContentContractTests.cs` tests the content, not the code. It searches the project for every `AnimalConfig` and `WorldSettings` asset and runs each check once per asset, so a new animal is covered as soon as it exists.
+
+| Check | Verifies |
+|---|---|
+| `Animal_ConfigIsValid` | prefab and movement are set, there's at least one tag, no empty slots, the movement's values make sense |
+| `Animal_PrefabFollowsTheBaseLayout` | the Rigidbody fits the ground plane, there's a solid collider on the root, a `Visual` child with no colliders, no zero-scale parts |
+| `Animal_CanBeSpawned` | the animal spawns alive, in place, with a valid heading |
+| `World_SettingsAreValid` | spawn timing makes sense and every animal in the table is valid |
+| `DefaultWorld_MatchesTheSpec` | frog and snake only, one spawn every 1–2 s, frog = jumping prey, snake = linear predator |
+
+`ZooSceneSmokeTests` goes one step further: it plays the real scene and checks that a snake really eats a frog.
+
+**Why:** with "1000 animals", most changes are content made in the Editor, often by designers. These tests catch everyday mistakes, such as a missing tag that makes an animal impossible to eat, or the default collider on a Unity cube left under `Visual`. Adding an animal is data only, and every piece of that data is checked automatically. Studios call this content or asset validation and often run it in CI.
+
 ### Smaller ones
 
 - **Registry:** `AnimalRegistry` is the set of living animals. An animal is alive exactly while its id is registered.
@@ -153,3 +169,12 @@ Full MVP also goes the other way: the view raises user input, and the presenter 
 - **MVVM reverses the dependency.** The ViewModel exposes its state, for example `ReactiveProperty<int> DeadPrey`, and never sees a view, while the view subscribes to it. Binding can be plain code (R3 or UniRx reactive properties) or declared in markup (UI Toolkit runtime binding). Only the markup version uses "magic": reflection or generated code.
 
 **Choice:** MVP. The HUD is two numbers and a pooled label, so explicit pushes are simpler and easier to follow. A large, form-heavy UI would be a better fit for MVVM with binding.
+
+### Which tests use the real content, and which use their own?
+
+It depends on what a test protects.
+
+- **Code tests build their own data.** Food chain, movement, mapper, play area, wizard and headless simulation tests create their tags, configs and worlds in code (`TestAssets`, the Core `Zoo` fakes) or as temporary assets. Renaming, moving or retuning the shipped content can't break them. They share only `AnimalBase.prefab`, which is the physics every animal really has.
+- **Content tests use the real content on purpose.** `ContentContractTests` and `ZooSceneSmokeTests` exist to catch broken content, so they must look at what actually ships.
+
+Tuning values, such as a faster snake or a shorter frog jump, fail no test. Tests check rules, not exact numbers, so designers can tune freely.
